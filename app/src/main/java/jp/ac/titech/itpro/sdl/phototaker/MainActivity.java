@@ -3,16 +3,22 @@ package jp.ac.titech.itpro.sdl.phototaker;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.util.Log;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    private final static String TAG = MainActivity.class.getSimpleName(); //
+//    private final static String TARGET_PACKAGE = "com.android.camera";
+//    private final static String TARGET_CLASS = TARGET_PACKAGE + ".MainActivity";
 
     private final static int REQ_PHOTO = 1234;
     private Bitmap photoImage = null;
@@ -26,8 +32,10 @@ public class MainActivity extends AppCompatActivity {
         photoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
+                Log.d(TAG, "onClick of Photo button");
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 // TODO: You should setup appropriate parameters for the intent
+                // using case 4: implicit intent, from tutorial
 
                 PackageManager manager = getPackageManager();
                 List activities = manager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
@@ -55,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
             case REQ_PHOTO:
                 if (resCode == RESULT_OK) {
                     // TODO: You should implement the code that retrieve a bitmap image
+                    Bundle extras = data.getExtras();
+                    photoImage = (Bitmap) extras.get("data");
                 }
                 break;
         }
